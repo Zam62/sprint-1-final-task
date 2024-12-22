@@ -32,7 +32,6 @@ func RequestHandler(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Запрос: %s %s", expr.Expression, r.URL.Path)
 
 	default:
-		// http.ServeFile(w, r, "form.html")
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(map[string]interface{}{
@@ -61,7 +60,7 @@ func calculateMiddleware(next http.Handler) http.Handler {
 			log.Printf("Запрос: %s %s %s", r.Method, r.URL.Path, expr.Expression)
 			// Считаем выражение
 			result, err := service.Calc(expr.Expression)
-			log.Printf("Запрос: %s", result)
+			// log.Printf("Запрос: %s", result)
 
 			if err != nil {
 				w.Header().Set("Content-Type", "application/json")
@@ -95,7 +94,7 @@ func main() {
 	// Создаём обработчик для маршрута "/"
 	calculate := http.HandlerFunc(RequestHandler)
 
-	// Применяем logging middleware к обработчику "/"
+	// Применяем middleware к обработчику "/"
 	mux.Handle("/api/v1/calculate", calculateMiddleware(calculate))
 
 	// Запускаем сервер на порту 3030
