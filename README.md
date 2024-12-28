@@ -66,6 +66,9 @@ http://localhost:3030/api/v1/calculate
 
 
 ## Запуск проекта
+Для установки проекта нужно клонировать папку проекта с github.com:
+    
+    git clone https://github.com/Zam62/sprint-1-final-task.git
 
 Для запуска сервера нужно перейти в рабочую директорию проекта и выполнить запуск основного файла проекта:
 
@@ -77,5 +80,5 @@ http://localhost:3030/api/v1/calculate
 Для запуска тестов необходимо перейти в папку cmd и выполнить запуск тестов:
 
     cd cmd/
-    go test -v -timeout 30s
+    go test -v -timeout 30s ./cmd ./service/
 

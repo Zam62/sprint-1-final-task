@@ -33,7 +33,7 @@ func RequestHandler(w http.ResponseWriter, r *http.Request) {
 
 	default:
 		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusMethodNotAllowed)
 		json.NewEncoder(w).Encode(map[string]interface{}{
 			"error": "Only POST requests are allowed",
 		})

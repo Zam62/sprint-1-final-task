@@ -11,17 +11,23 @@ import (
 
 func TestRequestHandlerSuccessCase(t *testing.T) {
 	mcPostBody := map[string]interface{}{
-		"exspression": "2*s2",
+		"exspression": "2*2",
 	}
 	body, _ := json.Marshal(mcPostBody)
 
-	w := httptest.NewRecorder()
-	req, _ := http.NewRequest(http.MethodPost, "/api/v1/calculate/", bytes.NewReader(body))
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	rr := httptest.NewRecorder()
+	req, err := http.NewRequest(http.MethodPost, "/api/v1/calculate/", bytes.NewReader(body))
 
-	RequestHandler(w, req)
-	res := w.Result()
+	if err != nil {
+		t.Error(err)
+	}
+
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	RequestHandler(rr, req)
+	res := rr.Result()
+
 	defer res.Body.Close()
+
 	data, err := io.ReadAll(res.Body)
 	if err != nil {
 		t.Errorf("Error: %v", err)
@@ -34,79 +40,3 @@ func TestRequestHandlerSuccessCase(t *testing.T) {
 		t.Errorf("Expression is empty. You must supply an exspression but got %v", string(data))
 	}
 }
-
-// func TestRequestHandlerEmptyExpressionCase(t *testing.T) {
-// 	expected := "Expression is empty. You must supply an exspression"
-// 	req := httptest.NewRequest(http.MethodGet, "/api/v1/calculate?expression=", nil)
-// 	w := httptest.NewRecorder()
-// 	RequestHandler(w, req)
-// 	res := w.Result()
-// 	defer res.Body.Close()
-// 	data, err := io.ReadAll(res.Body)
-// 	if err != nil {
-// 		t.Errorf("Error: %v", err)
-// 	}
-// 	if res.StatusCode != http.StatusBadRequest {
-// 		t.Errorf("wrong status code")
-// 	}
-
-// 	if string(data) != expected {
-// 		t.Errorf("Expression is empty. You must supply an exspression but got %v", string(data))
-// 	}
-// }
-
-// func TestRequestHandlerBadRequestCase(t *testing.T) {
-// 	expected := "Bad request"
-// 	req := httptest.NewRequest(http.MethodGet, "/api/v1/calculate?expression=/%", nil)
-// 	w := httptest.NewRecorder()
-// 	RequestHandler(w, req)
-// 	res := w.Result()
-// 	defer res.Body.Close()
-// 	data, err := io.ReadAll(res.Body)
-// 	if err != nil {
-// 		t.Errorf("Error: %v", err)
-// 	}
-// 	if res.StatusCode != http.StatusBadRequest {
-// 		t.Errorf("wrong status code")
-// 	}
-
-// 	if string(data) != expected {
-// 		t.Errorf("Expression is empty. You must supply an exspression but got %v", string(data))
-// 	}
-// }
-
-// func TestRequestHandlerWrongPortCase(t *testing.T) {
-// 	expected := "Bad request"
-// 	req := httptest.NewRequest(http.MethodGet, "localhost://1111", nil)
-// 	w := httptest.NewRecorder()
-// 	RequestHandler(w, req)
-// 	res := w.Result()
-// 	defer res.Body.Close()
-// 	data, err := io.ReadAll(res.Body)
-// 	if err != nil {
-// 		t.Errorf("Error: %v", err)
-// 	}
-// 	if res.StatusCode != http.StatusBadRequest {
-// 		t.Errorf("wrong status code")
-// 	}
-
-// 	if string(data) != expected {
-// 		t.Errorf("Expression is empty. You must supply an exspression but got %v", string(data))
-// 	}
-// }
-
-// // Test middleware
-// // func TestCalculateMiddlewareSuccessCase(t *testing.T) {
-// // 	calculateHandler := func(w http.ResponseWriter, r *http.Request) {
-// // 		r.WithContext(context.WithValue(r.Context(), "something", "hello"))
-// // 	}
-
-// // 	req := httptest.NewRequest(http.MethodGet, "http://www.example.com", nil)
-// // 	res := httptest.NewRecorder()
-// // 	calculateHandler(res, req)
-
-// // 	tim := calculateMiddleware(calculateHandler)
-// // 	tim.ServeHTTP(res, req)
-
-// // 	assert.Equal(t, http.StatusOK, res.Result().StatusCode)
-// // }
