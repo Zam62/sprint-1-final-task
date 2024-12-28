@@ -33,7 +33,7 @@ func TestRequestHandlerSuccessCase(t *testing.T) {
 		t.Errorf("Error: %v", err)
 	}
 	if res.StatusCode != http.StatusOK {
-		t.Errorf("wrong status code")
+		t.Errorf("wrong status code, expected: %d", res.StatusCode)
 	}
 
 	if string(data) != "" {
